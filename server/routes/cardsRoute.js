@@ -1,10 +1,8 @@
 const express = require('express');
 const router=express.Router();
 const Card = require("../models/card");
-const images = require('../models/modelTest');
 const multer=require('multer');
 
-const path = require('path');
 
 const storage = multer.diskStorage({
     destination:function (req,file,cb){
@@ -24,8 +22,8 @@ const upload = multer({
   });
 
 router.get('/',(req,res)=>{
-     Card.find().then(card=>{
-         res.json(card);
+     Card.find().then(cards=>{
+         res.json(cards);
     });
 })
     
@@ -34,6 +32,12 @@ router.get('/singlecard/:id',async (req, res)=>{
    res.json(card);
    console.log(card);
 });
+router.delete('/singlecard/:id',(req, res)=>{
+  Card.deleteOne({_id: req.params.id})
+  .then(res=>res.status(200).json(res))
+  .catch(err=> console.log(err));
+});
+
 
 router.post('/', upload.single('imagePath'), async (request, response) => {
  
